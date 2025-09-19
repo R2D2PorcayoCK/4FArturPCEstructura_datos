@@ -5,6 +5,27 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "Primo",
+            "request": "launch",
+            "mainClass": "Primo",
+            "projectName": "4FArturPCEstructura_datos_f05f361d"
+        },
+        {
+            "type": "java",
+            "name": "Cadena",
+            "request": "launch",
+            "mainClass": "Cadena",
+            "projectName": "4FArturPCEstructura_datos_f05f361d"
+        },
+        {
+            "type": "java",
+            "name": "Fibo",
+            "request": "launch",
+            "mainClass": "Fibo",
+            "projectName": "4FArturPCEstructura_datos_f05f361d"
+        },
+        {
             "type": "jdk",
             "request": "launch",
             "name": "Launch Java App"
