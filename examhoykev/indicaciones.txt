@@ -1,0 +1,128 @@
+Hay una cola de llegada de paquetes. Dependiendo del peso, los paquetes se “guardan” en dos pilas (simulando estantes): lightStack y heavyStack. Después, se “despachan” a una lista final en un orden definido (primero todos los pesados LIFO, luego los ligeros LIFO). Todo se hace sin bucles.
+
+
+INSTRUCCIONES DEL EJERCICIO PRÁCTICO
+----------------------------------
+
+REGLA DE IMPRESIÓN EN main
+- En el método main, SÍ se puede usar for/while o un println directo para mostrar List/Queue/Stack.
+- En los métodos que se piden como “recursivos”, NO se permiten for/while (ver sección RESTRICCIONES).
+
+------------------------------------------------------
+1) Clase Package
+------------------------------------------------------
+Atributos privados:
+- int id
+- double weightKg
+- String desc
+
+Requerido:
+- Constructor con parámetros para inicializar los atributos (id, weightKg, desc).
+- Método boolean isHeavy(): devuelve true si weightKg >= 10.0, false en caso contrario.
+- Método toString(): representación legible, por ejemplo:
+Package{id=6, weightKg=10.0, desc="Herramientas"}
+
+Notas:
+- El umbral (10.0 kg) es fijo y no debe parametrizarse en este ejercicio.
+
+------------------------------------------------------
+2) Clase WarehouseUtils
+------------------------------------------------------
+Estructuras requeridas como atributos:
+- Queue<Package> incoming // cola de llegada (entrada de paquetes)
+- Stack<Package> heavyStack // estante/pila para paquetes PESADOS
+- Stack<Package> lightStack // estante/pila para paquetes LIGEROS
+- List<Package> dispatched // lista de paquetes despachados en orden final
+
+Métodos a implementar (recursivos, SIN bucles):
+a) public void storeRec(Queue<Package> incoming)
+Vaciar la cola incoming clasificando cada elemento en la pila correspondiente.
+- Caso base: si incoming == null || incoming.isEmpty(), terminar.
+- Paso recursivo:
+1. Tomar el primero con poll().
+2. Si p.isHeavy() es true ->heavyStack.push(p), en caso contrario -> lightStack.push(p).
+3. Llamar recursivamente storeRec(incoming) hasta que quede vacía.
+Restricción: No crear estructuras auxiliares para recorrer; trabajar directamente con poll() y push().
+
+
+b) public void dispatchHeavyRec(Stack<Package> heavyStack, List<Package> dispatched)
+Pasar TODOS los paquetes de heavyStack a dispatched en orden LIFO (pop → add).
+
+- Caso base: if (heavyStack == null || heavyStack.isEmpty()) return;
+- Paso recursivo: pop, mostrar “Despachando PESADO: …”, add a dispatched, llamar de nuevo.
+Nota: Se imprime dentro del método para evidenciar el flujo. No reponer elementos en la pila.
+
+
+c) public void dispatchLightRec(Stack<Package> lightStack, List<Package> dispatched)
+Igual que (b), cambiando el texto mostrado a “Despachando LIGERO: …”.
+
+------------------------------------------------------
+3) Clase Main (punto de entrada)
+------------------------------------------------------
+Secuencia de pasos OBLIGATORIA:
+1. Instanciar WarehouseUtils (con estructuras vacías).
+
+2. Crear 6 objetos Package con mezcla de pesos (<10.0 y >=10.0). Ejemplo de datos sugeridos (puedes cambiarlos):
+(1, 12.5, "Gimnasio"), (2, 3.2, "Ropa"), (3, 18.0, "Equipo audio"),
+(4, 1.1, "Joyero"), (5, 9.9, "Utensilios"), (6, 10.0, "Herramientas").
+3. Encolar los 6 paquetes en incoming en el orden anterior (offer).
+
+4. Mostrar “— Llegadas (cola) —”. Para imprimir, aquí SÍ puedes usar for/while o un System.out.println de la estructura.
+*Ej.: System.out.println(incoming);
+
+5. Llamar storeRec(incoming). Al finalizar, incoming debe quedar vacía y los elementos deben estar en las pilas:
+- Pesados en heavyStack (LIFO) y
+- Ligeros en lightStack (LIFO).
+
+6. Llamar dispatchHeavyRec(heavyStack, dispatched) para despachar primero los PESADOS.
+
+7. Llamar dispatchLightRec(lightStack, dispatched) para despachar después los LIGEROS.
+
+8. Al final, imprimir la lista dispatched con el orden final (aquí SÍ puedes usar for/while o println directo).
+
+
+Mensajes MÍNIMOS requeridos en consola (formato libre pero claro):
+- Título de llegadas.
+- Mensaje “Guardando en estantes…” antes de storeRec.
+- Mensajes de despacho con la etiqueta PESADO/LIGERO por cada pop.
+- Título de orden final y la impresión de dispatched.
+
+------------------------------------------------------
+RESTRICCIONES
+------------------------------------------------------
+- PROHIBIDO usar for/while/do-while dentro de: storeRec, dispatchHeavyRec y dispatchLightRec.
+- PROHIBIDO usar Streams en los métodos recursivos solicitados.
+- En main SÍ se permite usar for/while o println directos para imprimir.
+- No se deben perder elementos durante el proceso; al terminar:
+incoming debe estar vacía; heavyStack y lightStack deben quedar vacías; dispatched debe contener los 6 elementos.
+
+------------------------------------------------------
+EJEMPLO DE SALIDA REFERENCIAL 
+------------------------------------------------------
+— Llegadas (cola) —
+Package{id=1, weightKg=12.5, desc="Gimnasio"}
+Package{id=2, weightKg=3.2, desc="Ropa"}
+Package{id=3, weightKg=18.0, desc="Equipo audio"}
+Package{id=4, weightKg=1.1, desc="Joyero"}
+Package{id=5, weightKg=9.9, desc="Utensilios"}
+Package{id=6, weightKg=10.0, desc="Herramientas"}
+
+Guardando en estantes...
+(cola vacía)
+
+Despachando PESADOS (LIFO)
+— Despachando PESADO: Package{id=6, weightKg=10.0, desc="Herramientas"}
+— Despachando PESADO: Package{id=3, weightKg=18.0, desc="Equipo audio"}
+— Despachando PESADO: Package{id=1, weightKg=12.5, desc="Gimnasio"}
+
+Despachando LIGEROS (LIFO)
+— Despachando LIGERO: Package{id=5, weightKg=9.9, desc="Utensilios"}
+— Despachando LIGERO: Package{id=4, weightKg=1.1, desc="Joyero"}
+— Despachando LIGERO: Package{id=2, weightKg=3.2, desc="Ropa"}
+
+Orden final (List dispatched):
+[Package{id=6, ...}, Package{id=3, ...}, Package{id=1, ...},
+Package{id=5, ...}, Package{id=4, ...}, Package{id=2, ...}]
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+mirar paso 3-?
