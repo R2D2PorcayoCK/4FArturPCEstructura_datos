@@ -2,12 +2,16 @@ public class App {
     public static void main(String[] args) throws Exception {
 
         SinglyLinkedList lista = new SinglyLinkedList();
+        lista.add(1);
+        lista.add(2);
+        lista.add(3);
+        lista.add(4);
+        lista.add(5);
+        lista.add(6);
+        lista.add(7);
+        lista.add(8);
+        lista.add(9);
         lista.add(10);
-        lista.add(15);
-        lista.add(20);
-        lista.add(25);
-        lista.add(30);
-        lista.add(35);
 
         System.out.println("Lista Original:");
         lista.printList();
@@ -33,3 +37,4 @@ public class App {
         listaImpares.printList();
     }
 }
+
